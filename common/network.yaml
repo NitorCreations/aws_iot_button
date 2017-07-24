@@ -1,0 +1,80 @@
+paramVPCCidr:
+  Default:
+    StackRef:
+      paramName: VPCCIDR
+      region: {Ref: 'AWS::Region'}
+      stackName: network
+  Description: VPC Cidr
+  Type: String
+paramVPCId:
+  Default:
+    StackRef:
+      paramName: VPC
+      region: {Ref: 'AWS::Region'}
+      stackName: network
+  Description: Infra subnet A
+  Type: AWS::EC2::VPC::Id
+paramSubnetInfraA:
+  Default:
+    StackRef:
+      paramName: subnetInfraA
+      region: {Ref: 'AWS::Region'}
+      stackName: network
+  Description: Public subnet A
+  Type: AWS::EC2::Subnet::Id
+paramSubnetPrivInfraA:
+  Default:
+    StackRef:
+      paramName: subnetPrivInfraA
+      region: {Ref: 'AWS::Region'}
+      stackName: network
+  Description: Private subnet A
+  Type: AWS::EC2::Subnet::Id
+paramPublicSubnetGroup:
+  Default:
+    StackRef:
+      paramName: publicSubnetGroup
+      region: {Ref: 'AWS::Region'}
+      stackName: network
+  Description: Public subnet group
+  Type: String
+paramPrivateSubnetGroup:
+  Default:
+    StackRef:
+      paramName: privateSubnetGroup
+      region: {Ref: 'AWS::Region'}
+      stackName: network
+  Description: Private subnet group
+  Type: String
+paramSubnetInfraB:
+  Default:
+    StackRef:
+      paramName: subnetInfraB
+      region: {Ref: 'AWS::Region'}
+      stackName: network
+  Description: Public subnet B
+  Type: AWS::EC2::Subnet::Id
+paramSubnetPrivInfraB:
+  Default:
+    StackRef:
+      paramName: subnetPrivInfraB
+      region: {Ref: 'AWS::Region'}
+      stackName: network
+  Description: Private subnet B
+  Type: AWS::EC2::Subnet::Id
+paramSubnetInfraC:
+  Default:
+    StackRef:
+      paramName: subnetInfraC
+      region: {Ref: 'AWS::Region'}
+      stackName: network
+  Description: Public subnet C
+  Type: AWS::EC2::Subnet::Id
+paramSubnetPrivInfraC:
+  Default:
+    StackRef:
+      paramName: subnetPrivInfraC
+      region: {Ref: 'AWS::Region'}
+      stackName: network
+  Description: Private subnet C
+  Type: AWS::EC2::Subnet::Id
