@@ -11,3 +11,4 @@ cacert/*.key
 cacert/*.pem
 cacert/*.srl
 cacert/cacertid.yml
+!cacert/awsRootCA.pem
