@@ -6,3 +6,8 @@ jspm_packages
 .serverless
 
 .DS_Store
+
+cacert/*.key
+cacert/*.pem
+cacert/*.srl
+cacert/cacertid.yml
