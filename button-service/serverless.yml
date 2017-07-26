@@ -19,27 +19,31 @@ service: button-service
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs4.3
+
+  # you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - iot:UpdateCertificate
+        - iot:CreatePolicy
+        - iot:AttachPrincipalPolicy
+        - iot:AttachThingPrincipal
+      Resource: "*"
 
 # you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+# stage: dev
+  region: eu-west-1
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+plugins:
+  - serverless-plugin-scripts
+
+custom:
+  scripts:
+    hooks:
+      'after:deploy:resources': ./init_iot_logging.sh
+  cacert: ${file(../cacert/cacertid.yml)}
+
 
 # you can define service wide environment variables here
 #  environment:
@@ -55,8 +59,13 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  registerDevice:
+    handler: registerDevice/handler.registerDevice
+    environment:
+      region: ${self:provider.region}
+    events:
+      - iot:
+          sql: "SELECT * FROM '$aws/events/certificates/registered/${self:custom.cacert.caCertificateId}'"
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -91,13 +100,53 @@ functions:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
+resources:
+  Resources:
+    iotLogRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service:
+                  - "iot.amazonaws.com"
+              Action:
+                - "sts:AssumeRole"
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSIoTLogging
+    buttonThing:
+      Type: AWS::IoT::Thing
+      Properties:
+        ThingName: button
+  # iotPermission:
+  #   Type: "AWS::Lambda::Permission"
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName:
+  #       Fn::GetAtt:
+  #         - "RegisterDeviceLambdaFunction"
+  #         - "Arn"
+  #     Principal: "iot.amazonaws.com"
+  #     SourceAccount:
+  #       Ref: "AWS::AccountId"
+  # registerDeviceRule:
+  #   Type: "AWS::IoT::TopicRule"
+  #   Properties:
+  #     RuleName: buttonRegisterDeviceRule
+  #     TopicRulePayload:
+  #       Actions:
+  #         - Lambda:
+  #             FunctionArn:
+  #               Fn::GetAtt:
+  #                 - "RegisterDeviceLambdaFunction"
+  #                 - "Arn"
+  #       Description: Trigger device auto registration function
+  #       RuleDisabled: False
+  #       Sql: "SELECT * FROM '$aws/events/certificates/registered/${self:custom.cacert.caCertificateId}'"
+
+# Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
