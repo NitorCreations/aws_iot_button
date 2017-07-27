@@ -1,14 +1,16 @@
 # package directories
-node_modules
-jspm_packages
+**/node_modules
+**/jspm_packages
 
 # Serverless directories
-.serverless
+button-service/.serverless
 
-.DS_Store
+**/.DS_Store
 
 cacert/*.key
 cacert/*.pem
 cacert/*.srl
 cacert/cacertid.yml
 !cacert/awsRootCA.pem
+
+button-service/iotInfo.yml
