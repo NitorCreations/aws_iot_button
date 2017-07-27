@@ -3,7 +3,7 @@
 Push a button every 108 minutes to keep the world going <sup>[1]</sup>.
 
 Ways to push the button:
-- AWS IoT Buttons (X.509 certificate auth)
+- AWS IoT Buttons (X.509 certificate auth, shadow update proxied via a lambda function)
 - Raspberry Pi + Sense HAT (X.509 certificate auth, will also update device shadow info and display stuff on Sense HAT LED matrix)
 - PWA App (Cognito auth, support for device shadow operations as well)
 
@@ -15,11 +15,7 @@ Prerequisites:
 - Nitor deploy tools (ndt) installed (do yourself a favor and use a python virtualenv)
 - AWS account credentials set up for aws CLI and ndt (`ndt setup-cli`)
 
-Deployment steps:
-- vault --init
-- button-service/deploy_certs.sh
-- button-service/init-iot_logging.sh
-- sls deploy
+Deployment steps: [`button-service/deploy.sh`](button-service/deploy.sh)
 
 ## Authorizing device certificates
 
