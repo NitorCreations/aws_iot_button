@@ -13,13 +13,6 @@ module.exports.pushHandler = (event, context, callback) => {
 
   console.log(`Proxying IoT button event:\n${JSON.stringify(event, null, 2)}`);
 
-  //
-  // Replace the values of '<YourUniqueClientIdentifier>' and '<YourCustomEndpoint>'
-  // with a unique client identifier and custom host endpoint provided in AWS IoT cloud
-  // NOTE: client identifiers must be unique within your AWS account; if a client attempts
-  // to connect with a client identifier which is already in use, the existing
-  // connection will be terminated.
-  //
   var iotdata = new AWS.IotData({
     endpoint: process.env.iotEndpoint,
     apiVersion: '2015-05-28'
