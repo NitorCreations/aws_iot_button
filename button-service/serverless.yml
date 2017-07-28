@@ -45,7 +45,7 @@ custom:
     hooks:
       'after:deploy:resources': ./init_iot_logging.sh
   cacert: ${file(../cacert/cacertid.yml)}
-  iot: ${file(iotInfo.yml)}
+  jsvars: ${file(variables.js)}
 
 # you can define service wide environment variables here
 #  environment:
@@ -72,7 +72,7 @@ functions:
     handler: updateButtonStatus/iotButtonHandler.pushHandler
     environment:
       region: ${self:provider.region}
-      iotEndpoint: ${self:custom.iot.endpoint}
+      iotEndpoint: ${self:custom.jsvars.iot.endpoint}
     events:
       - iot:
           sql: "SELECT * FROM 'iotbutton/+'"
@@ -130,6 +130,46 @@ resources:
       Type: AWS::IoT::Thing
       Properties:
         ThingName: button
+    cognitoIdentityPoolForApp:
+      Type: "AWS::Cognito::IdentityPool"
+      Properties:
+        IdentityPoolName: ButtonAppIdentityPool
+        AllowUnauthenticatedIdentities: true
+    cognitoRoleAttachment:
+      Type: "AWS::Cognito::IdentityPoolRoleAttachment"
+      Properties:
+        IdentityPoolId:
+          Ref: cognitoIdentityPoolForApp
+        Roles:
+          unauthenticated:
+            Fn::GetAtt:
+              - appUnauthenticatedRole
+              - Arn
+    appUnauthenticatedRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Action: sts:AssumeRoleWithWebIdentity
+              Effect: "Allow"
+              Condition:
+                StringEquals:
+                  cognito-identity.amazonaws.com:aud: "eu-west-1:a0800718-4cd9-42d9-a26c-16e708bb8783"
+                ForAnyValue:StringLike:
+                  cognito-identity.amazonaws.com:amr: "unauthenticated"
+              Principal:
+                Federated: "cognito-identity.amazonaws.com"
+        Policies:
+          - PolicyName: appUnauthenticatedPolicy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: "Allow"
+                  Action:
+                    - iot:GetThingShadow
+                  Resource: "arn:aws:iot:eu-west-1:${self:custom.jsvars.accountId}:thing/button"
+
   # iotPermission:
   #   Type: "AWS::Lambda::Permission"
   #   Properties:
