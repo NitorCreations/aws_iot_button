@@ -10,3 +10,4 @@ cd "$(dirname ${BASH_SOURCE[0]})"
 ../cacert/gen_device_cert.sh
 sls deploy
 ./init_iot_logging.sh
+./setup_app_env.sh

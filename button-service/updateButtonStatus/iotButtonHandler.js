@@ -18,10 +18,11 @@ module.exports.pushHandler = (event, context, callback) => {
     apiVersion: '2015-05-28'
   });
   var payload = {
-    "state": {
-      "desired": {
-         "pushedAt": Math.floor(Date.now() / 1000),
-         "pusher": event.serialNumber
+    state: {
+      desired: {
+         pushedAt: Math.floor(Date.now() / 1000),
+         pusher: event.serialNumber,
+         intervalSeconds: 60
        }
      }
   };

@@ -145,6 +145,10 @@ resources:
             Fn::GetAtt:
               - appUnauthenticatedRole
               - Arn
+          authenticated:
+            Fn::GetAtt:
+              - appUnauthenticatedRole
+              - Arn
     appUnauthenticatedRole:
       Type: "AWS::IAM::Role"
       Properties:
@@ -155,7 +159,8 @@ resources:
               Effect: "Allow"
               Condition:
                 StringEquals:
-                  cognito-identity.amazonaws.com:aud: "eu-west-1:a0800718-4cd9-42d9-a26c-16e708bb8783"
+                  cognito-identity.amazonaws.com:aud:
+                    Ref: cognitoIdentityPoolForApp
                 ForAnyValue:StringLike:
                   cognito-identity.amazonaws.com:amr: "unauthenticated"
               Principal:
@@ -168,6 +173,7 @@ resources:
                 - Effect: "Allow"
                   Action:
                     - iot:GetThingShadow
+                    - iot:UpdateThingShadow
                   Resource: "arn:aws:iot:eu-west-1:${self:custom.jsvars.accountId}:thing/button"
 
   # iotPermission:
