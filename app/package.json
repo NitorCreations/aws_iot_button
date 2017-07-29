@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "aws-sdk": "^2.92.0",
     "react": "^15.6.1",
-    "react-countdown-clock": "^2.0.0",
+    "react-countdown-clock": "mmajis/react-countdown-clock",
     "react-dom": "^15.6.1",
     "react-scripts": "1.0.10"
   },
@@ -20,7 +21,6 @@
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.1.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "linter-xo": "^0.23.1"
+    "eslint-plugin-standard": "^3.0.1"
   }
 }

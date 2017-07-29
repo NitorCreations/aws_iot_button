@@ -19,3 +19,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+#this should be generated with ../button-service/setup_app_env.sh (included in deploy.sh)
+.env
