@@ -34,6 +34,7 @@
   margin: auto auto;
   display: flex;
   /*position: static !important;*/
+  cursor: pointer;
 }
 
 

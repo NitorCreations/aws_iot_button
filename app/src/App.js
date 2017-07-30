@@ -36,7 +36,6 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-canvasContainer">
-          <p>secondsLeft {this.state.secondsLeft}</p>
           <ReactCountdownClock ref={(countdown) => { this._countdown = countdown; }}
                                seconds={this.state.secondsLeft}
                                paused={this.state.paused}

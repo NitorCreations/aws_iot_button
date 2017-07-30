@@ -34,7 +34,7 @@ provider:
       Resource: "*"
 
 # you can overwrite defaults here
-# stage: dev
+  stage: dev
   region: eu-west-1
 
 plugins:
@@ -46,6 +46,7 @@ custom:
       'after:deploy:resources': ./init_iot_logging.sh
   cacert: ${file(../cacert/cacertid.yml)}
   jsvars: ${file(variables.js)}
+  stage: ${opt:stage, self:provider.stage}
 
 # you can define service wide environment variables here
 #  environment:
@@ -175,6 +176,33 @@ resources:
                     - iot:GetThingShadow
                     - iot:UpdateThingShadow
                   Resource: "arn:aws:iot:eu-west-1:${self:custom.jsvars.accountId}:thing/button"
+    appHostingBucket:
+      Type: "AWS::S3::Bucket"
+      Properties:
+        AccessControl: PublicRead
+        WebsiteConfiguration:
+          IndexDocument: "index.html"
+        Tags:
+          - Key: buttonApp
+            Value: ${self:custom.stage}
+    appHostingBucketPolicy:
+      Type: 'AWS::S3::BucketPolicy'
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: PublicReadForGetBucketObjects
+              Effect: Allow
+              Principal: '*'
+              Action: 's3:GetObject'
+              Resource:
+                Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Ref: appHostingBucket
+                    - /*
+        Bucket:
+          Ref: appHostingBucket
 
   # iotPermission:
   #   Type: "AWS::Lambda::Permission"
