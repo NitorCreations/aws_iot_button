@@ -180,8 +180,6 @@ resources:
       Type: "AWS::S3::Bucket"
       Properties:
         AccessControl: PublicRead
-        WebsiteConfiguration:
-          IndexDocument: "index.html"
         Tags:
           - Key: buttonApp
             Value: ${self:custom.stage}
@@ -203,6 +201,33 @@ resources:
                     - /*
         Bucket:
           Ref: appHostingBucket
+    appCloudFront:
+      Type: "AWS::CloudFront::Distribution"
+      Properties:
+        DistributionConfig:
+          Comment: CloudFront for button app mainly in order to enable HTTPS
+          DefaultCacheBehavior:
+            DefaultTTL: 60
+            ForwardedValues:
+              QueryString: true
+            MaxTTL: 60
+            MinTTL: 60
+            TargetOriginId: appBucket
+            ViewerProtocolPolicy: redirect-to-https
+          DefaultRootObject: index.html
+          Enabled: true
+          Origins:
+            - DomainName:
+                Fn::Join:
+                  - ""
+                  - - Ref: appHostingBucket
+                    - ".s3.amazonaws.com"
+              Id: appBucket
+              S3OriginConfig:
+                OriginAccessIdentity: ''
+          PriceClass: PriceClass_200
+          ViewerCertificate:
+            CloudFrontDefaultCertificate: 'true'
 
   # iotPermission:
   #   Type: "AWS::Lambda::Permission"
@@ -230,7 +255,20 @@ resources:
   #       RuleDisabled: False
   #       Sql: "SELECT * FROM '$aws/events/certificates/registered/${self:custom.cacert.caCertificateId}'"
 
-# Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+  Outputs:
+    AppURL:
+      Description: "URL for the button app"
+      Value:
+        Fn::Join:
+          - ""
+          - - "https://"
+            - Fn::GetAtt:
+              - appCloudFront
+              - DomainName
+      Export:
+        Name:
+          Fn::Join:
+            - ""
+            - - Ref: AWS::StackName
+              - ":"
+              - "AppURL"
