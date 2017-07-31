@@ -13,9 +13,12 @@ openssl req -new -key verificationCert.key -out verificationCert.csr -subj $VERI
 
 openssl x509 -req -in verificationCert.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out verificationCert.pem -days 500 -sha256
 
-CA_CERT_ID=$(aws iot register-ca-certificate --ca-certificate file://rootCA.pem --verification-cert file://verificationCert.pem --allow-auto-registration | jq -r .certificateId)
-
-aws iot update-ca-certificate --certificate-id $CA_CERT_ID --new-status ACTIVE
+REGISTER_RESULT=$(aws iot register-ca-certificate --ca-certificate file://rootCA.pem --verification-cert file://verificationCert.pem --allow-auto-registration --set-as-active 2>&1)
+if [ "$(echo $?)" -gt "0" ]; then
+  CA_CERT_ID=$(echo $REGISTER_RESULT | sed -n -e 's/^.*ID://p')
+else
+  CA_CERT_ID=$(echo $REGISTER_RESULT | jq -r .certificateId)
+fi
 
 rm verificationCert*
 
