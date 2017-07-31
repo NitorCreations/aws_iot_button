@@ -79,7 +79,7 @@ class App extends Component {
         }
         var stateChanges = {thingState: payload, paused: false};
         if (this.state.thingState.state) console.log(this.state.thingState.state.reported.pushedAt);
-        if (this.state.thingState.state === undefined || payload.state.reported.pushedAt != this.state.thingState.state.reported.pushedAt) {
+        if (this.state.thingState.state === undefined || payload.state.reported.pushedAt !== this.state.thingState.state.reported.pushedAt) {
           stateChanges.secondsLeft = this.timeLeft(payload);
         }
         this.setState(stateChanges);
