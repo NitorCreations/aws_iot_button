@@ -39,6 +39,8 @@ Deployment steps: [`deploy.sh`](deploy.sh)
 
 The deployment script will output a CloudFront URL for the web app.
 
+A device cert is generated in the `cacert` folder. That or others like it (signed with the CA certificate generated and registered during deployment) needs to be configured in hardware that is used to connect to the thing shadow on AWS IoT.
+
 ## Authorizing device certificates
 
 The service is set up for auto registration of device certificates signed with the CA certificate that is registered at initial deployment. A device needs to simply connect once to trigger registration. The first connection will not be authorized. Connect again in a couple of seconds to get authorized. See the [registerDevice](button-service/registerDevice) function.
