@@ -44,14 +44,14 @@ module.exports.registerDevice = (event, context, callback) => {
                 "Action": [
                     "iot:Subscribe"
                 ],
-                "Resource": `arn:aws:iot:${region}:${accountId}:topicfilter/${topicNamePrefix}/#`
+                "Resource": `arn:aws:iot:${region}:${accountId}:topicfilter/${topicNamePrefix}/*`
             },
             {
                 "Effect": "Allow",
                 "Action": [
                     "iot:Subscribe"
                 ],
-                "Resource": `arn:aws:iot:${region}:${accountId}:topicfilter/$aws/things/button/#`
+                "Resource": `arn:aws:iot:${region}:${accountId}:topicfilter/$aws/things/button/*`
             },
             {
                 "Effect": "Allow",
