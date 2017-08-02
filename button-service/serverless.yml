@@ -47,6 +47,7 @@ custom:
   cacert: ${file(../cacert/cacertid.yml)}
   jsvars: ${file(variables.js)}
   stage: ${opt:stage, self:provider.stage}
+  topicNamePrefix: iotbutton
 
 # you can define service wide environment variables here
 #  environment:
@@ -173,9 +174,26 @@ resources:
               Statement:
                 - Effect: "Allow"
                   Action:
+                    - iot:Connect
+                  Resource: "arn:aws:iot:${self:provider.region}:${self:custom.jsvars.accountId}:client/button/app/*"
+                - Effect: "Allow"
+                  Action:
                     - iot:GetThingShadow
                     - iot:UpdateThingShadow
                   Resource: "arn:aws:iot:eu-west-1:${self:custom.jsvars.accountId}:thing/button"
+                - Effect: "Allow"
+                  Action:
+                    - iot:Subscribe
+                  Resource:
+                    - arn:aws:iot:${self:provider.region}:${self:custom.jsvars.accountId}:topicfilter/${self:custom.topicNamePrefix}/*
+                    - arn:aws:iot:${self:provider.region}:${self:custom.jsvars.accountId}:topicfilter/$aws/things/button/*
+                - Effect: "Allow"
+                  Action:
+                    - iot:Receive
+                    - iot:Publish
+                  Resource:
+                    - arn:aws:iot:${self:provider.region}:${self:custom.jsvars.accountId}:topic/${self:custom.topicNamePrefix}/*
+                    - arn:aws:iot:${self:provider.region}:${self:custom.jsvars.accountId}:topic/$aws/things/button/*
     appHostingBucket:
       Type: "AWS::S3::Bucket"
       Properties:

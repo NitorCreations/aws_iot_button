@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "aws-iot-device-sdk": "^2.0.1",
     "aws-sdk": "^2.92.0",
     "react": "^15.6.1",
     "react-countdown-clock": "mmajis/react-countdown-clock",
