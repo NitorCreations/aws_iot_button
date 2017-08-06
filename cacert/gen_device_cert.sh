@@ -9,6 +9,7 @@ if [ ! -f deviceCert.key ] || [ ! -f deviceCert.pem ]; then
 
   vault -l deviceCert.key -p buttonthing -o deviceCert.key
   vault -l deviceCert.pem -p buttonthing -o deviceCert.pem
+  cat deviceCert.pem rootCA.pem > deviceCertAndCACert.pem
 
 fi
 
@@ -22,6 +23,7 @@ if [ ! -f deviceCert.key ] || [ ! -f deviceCert.pem ]; then
 
   vault -s -w -f deviceCert.key -p buttonthing
   vault -s -w -f deviceCert.pem -p buttonthing
+  cat deviceCert.pem rootCA.pem > deviceCertAndCACert.pem
 
   rm deviceCert.csr
 

@@ -152,9 +152,9 @@ class App extends Component {
     if (this.state.thingState.state) console.log(this.state.thingState.state.reported.pushedAt);
     if (this.state.thingState.state === undefined || stateObject.state.reported.pushedAt !== this.state.thingState.state.reported.pushedAt) {
       stateChanges.secondsLeft = this.timeLeft(stateObject);
+      this.setState({secondsLeft: NaN, paused: false});
+      this.setState(stateChanges);
     }
-    this.setState({secondsLeft: NaN, paused: false});
-    this.setState(stateChanges);
   }
   componentWillUnmount () {
       clearInterval(this.timer);
@@ -207,7 +207,8 @@ class App extends Component {
   timeLeft(thingState) {
     if (thingState.state && thingState.state.reported && thingState.state.reported.pushedAt) {
       var secondsLeft = (thingState.state.reported.pushedAt + thingState.state.reported.intervalSeconds) - this.nowInSeconds();
-      secondsLeft = secondsLeft < 0 ? 0 : secondsLeft;
+      secondsLeft = secondsLeft < 0 ? 0 : Math.min(secondsLeft, thingState.state.reported.intervalSeconds);
+      console.log(secondsLeft);
       return secondsLeft;
     } else {
       console.log("No reported thing state, returning secondsLeft as NaN :(");

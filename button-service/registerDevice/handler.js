@@ -20,7 +20,7 @@ module.exports.registerDevice = (event, context, callback) => {
     var policyName = `Policy_${certificateId}`;
     var thingName = `button`;
 
-    //Policy that allows connect, publish, subscribe and receive
+    //Policy that allows connect, publish, subscribe and receive.
     var policy = {
         "Version": "2012-10-17",
         "Statement": [
