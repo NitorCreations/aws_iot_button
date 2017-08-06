@@ -1,0 +1,3 @@
+[submodule "raspi"]
+	path = raspi
+	url = git@github.com:NitorCreations/aws_iot_button_raspi.git
