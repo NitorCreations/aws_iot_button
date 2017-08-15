@@ -15,7 +15,7 @@ resin env add COUNTDOWN_LENGTH 60000 -a AWSIoTButton
 resin env add IOT_CLIENT_ID_PREFIX button/raspibutton- -a AWSIoTButton
 resin env add THING_NAME button -a AWSIoTButton
 
-resin device move 9d748bdcdbc0f560ece3985c189cebcf -a AWSIoTButton
+resin device move 9d9aa8b0b945bb031dacb45a9d5ab22df4a81cabe94b329caab5507281f3eb -a AWSIoTButton
 
 cd raspi
 
