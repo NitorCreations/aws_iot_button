@@ -5,7 +5,7 @@ set -e
 
 cd "$(dirname ${BASH_SOURCE[0]})"
 
-if resin app create AWSIoTButton --type raspberrypi3; then fi
+resin app create AWSIoTButton --type raspberrypi3 ||:
 
 resin env add IOT_HOST $(aws iot describe-endpoint | jq -r .endpointAddress) -a AWSIoTButton
 resin env add AWS_ROOT_CA $(cat cacert/awsRootCA.pem | base64) -a AWSIoTButton
@@ -22,9 +22,7 @@ cd raspi
 RESIN_USERNAME=$(resin whoami | grep USERNAME | sed 's/USERNAME: //g')
 RESIN_REPO=$(resin app AWSIoTButton | grep 'GIT REPOSITORY' | sed 's/GIT REPOSITORY: //g')
 
-if [ "$(git remote -v | grep -q resin; echo $?)" -eq "0" ]; then
-  git remote remove resin
-fi
+git remote remove resin ||:
 
 git remote add resin $RESIN_USERNAME@git.resin.io:$RESIN_REPO.git
 
